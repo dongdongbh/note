@@ -1,7 +1,6 @@
 # Notes
-This is a repo of notes, and can be visit by [https://dongdongbh.github.io/note/](https://dongdongbh.github.io/note/)
-
-# Following is the readme of the Jekyll templete
+This is a repo of notes, and can be visit by [https://dongdongbh.github.io/note/](https://dongdongbh.github.io/note/).
+Following is the readme of the Jekyll templete.
 
 ## The "What ?" and the "Why ?"
 
