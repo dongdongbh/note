@@ -579,38 +579,38 @@ code {
 }
 
 /* GET */
-#content article.GET a h2 code {
+#content article.SHORTCUTS a h2 code {
   color: #119bdf;
 }
 
-#content article.GET a h2 code b {
+#content article.SHORTCUTS a h2 code b {
   background: #119bdf;
 }
 
 /* POST */
-#content article.POST a h2 code {
+#content article.TIPS a h2 code {
   color: #52ce0e;
 }
 
-#content article.POST a h2 code b {
+#content article.TIPS a h2 code b {
   background: #52ce0e;
 }
 
 /* PUT */
-#content article.PUT a h2 code {
+#content article.CODE a h2 code {
   color: #e08f10;
 }
 
-#content article.PUT a h2 code b {
+#content article.CODE a h2 code b {
   background: #e08f10;
 }
 
 /* DELETE */
-#content article.DELETE a h2 code {
+#content article.MISC a h2 code {
   color: #e02a10;
 }
 
-#content article.DELETE a h2 code b {
+#content article.MISC a h2 code b {
   background: #e02a10;
 }
 
