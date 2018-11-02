@@ -1,20 +1,6 @@
-title: dongdongbh notes
-description: notes
-show_downloads: false
-google_analytics:
-theme: jekyll-theme-slate
-
-
-
-defaults:
-  # _posts
-  - scope:
-      path: ""
-      type: posts
-    values:
-      layout: single
-      author_profile: true
-      read_time: true
-      comments: true # true
-      share: true
-      related: true
+---
+exclude: ['README.markdown']
+permalink: ':title'
+pygments: true
+safe: false
+title: 'Carte'
