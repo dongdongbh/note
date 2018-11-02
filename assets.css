@@ -514,7 +514,7 @@ code {
 #content {
   padding: 20px;
   padding-left: 260px;
-  max-width: 1000px;
+  max-width: 2000px;
 }
 
 #content .control {
@@ -526,7 +526,7 @@ code {
 #content article {
   clear: both;
   margin: 15px 0;
-  width: 2000px;
+  width: 1200px;
 }
 
 #content article > a {
@@ -622,7 +622,6 @@ code {
   border-top: 1px solid #eef1f2;
   display: block;
   padding: 15px 15px 0;
-  width: 1200px;
 }
 
 #content .body code {
