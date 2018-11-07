@@ -74,7 +74,7 @@ ssh -oPort=6000 test@x.x.x.x
 * you must open your port used in frs( eg. 7000,6000) on your server, usually it is on the setting of firewall rules.
 * Every client need one **remote_port** to map.
 
-
+and if you want to visit Jupyter notebook and tensorboard, you only need to add a new port to frpc, and then visit https://x.x.x.x:port
 
 ## ssh on your mobile phone
 
