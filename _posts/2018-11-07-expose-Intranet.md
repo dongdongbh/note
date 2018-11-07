@@ -1,3 +1,11 @@
+---
+category: Stuff
+path: '/stuff/:id'
+title: 'expose Intranet machine to outside'
+type: 'TIPS'
+
+layout: nil
+---
 ## expose Intranet machine to outside
 
 **condition**: you have a Intranet machine(mabe the machine is in your company), and it do not have a pubic IP, and you want to visit your machine at your home or anywhere can connect Internet.
