@@ -1,7 +1,7 @@
 ---
 category: Stuff
 path: '/stuff/:id'
-title: 'remote visit jupyter and tensorboard'
+title: 'remote visit https(jb)'
 type: 'TIPS'
 
 layout: nil

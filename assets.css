@@ -580,11 +580,11 @@ code {
 
 /* GET */
 #content article.SHORTCUTS a h2 code {
-  color: #119bdf;
+  color: #d8bb7d;
 }
 
 #content article.SHORTCUTS a h2 code b {
-  background: #119bdf;
+  background: #d8bb7d;
 }
 
 /* POST */
@@ -598,20 +598,20 @@ code {
 
 /* PUT */
 #content article.CODE a h2 code {
-  color: #e08f10;
+  color: #a0c4e5;
 }
 
 #content article.CODE a h2 code b {
-  background: #e08f10;
+  background: #a0c4e5;
 }
 
 /* DELETE */
 #content article.MISC a h2 code {
-  color: #e02a10;
+  color: #607a5d;
 }
 
 #content article.MISC a h2 code b {
-  background: #e02a10;
+  background: #607a5d;
 }
 
 /* Reference's body */

@@ -1,7 +1,7 @@
 ---
 category: Stuff
 path: '/stuff/:id'
-title: 'expose Intranet machine to outside'
+title: 'expose Intranet'
 type: 'TIPS'
 
 layout: nil
