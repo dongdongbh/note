@@ -1,0 +1,60 @@
+<h2 id="rl-note">RL note</h2>
+
+<h3 id="classification">classification</h3>
+
+<ul>
+  <li>model-based: previous observation <strong>predict</strong> following rewards and observations</li>
+  <li>model-free: train it by intuition</li>
+  <li>police-based: <strong>directly</strong> approximating the policy of the agent</li>
+  <li>value-based: the agent calculates the <strong>value of every possible action</strong></li>
+  <li>off police: the ability of the method to learn on old <strong>historical data</strong> (obtained</li>
+  <li>on police: requires <strong>fresh data</strong> obtained from the environment</li>
+</ul>
+
+<h2 id="police-based-method">Police-based method</h2>
+
+<p><strong>just like a classification problem</strong></p>
+
+<ul>
+  <li>NN input: observation</li>
+  <li>NN output: distribution of actions</li>
+  <li>agent: random choose action base on distribution of actions(police)</li>
+</ul>
+
+<h4 id="cross-entropy-method">cross-entropy method</h4>
+
+<ol>
+  <li>Play N number of episodes using our current model and environment.</li>
+  <li>Calculate the total reward for every episode and decide on a reward boundary. Usually, we use some percentile of all rewards, such as 50th or 70th.</li>
+  <li>Throw away all episodes with a reward below the boundary.</li>
+  <li>Train on the remaining “elite” episodes using observations as the input and issued actions as the desired output.</li>
+  <li>Repeat from step 1 until we become satisfied with the result.</li>
+</ol>
+
+<p>use <strong>cross-entropy loss</strong> function as loss fuction</p>
+
+<h3 id="nn">NN</h3>
+
+<h4 id="sigmoid">sigmoid</h4>
+
+<p><em><u>It transfer a value input to (0,1)</u></em></p>
+
+<script type="math/tex; mode=display">f(x)=\frac{L}{1+e^{-x}} = \frac{e^{x}}{e{x}+1}</script>
+
+<h4 id="softmax"><strong>softmax</strong></h4>
+
+<p>In short, <em><u>It transfer K-dimensional vector input to (0,1)</u></em></p>
+
+<p>In mathematics, the softmax function, or normalized exponential function, is a generalization of the logistic function that “squashes” a K-dimensional vector <strong>z</strong>  of arbitrary real values to a K-dimensional vector  \sigma(<strong>z</strong>) of real values, where each entry is in the range (0, 1), and all the entries add up to 1.</p>
+
+<h4 id="tanh">tanh</h4>
+
+<p><em><u>It transfer a value input to (-1,1)</u></em></p>
+
+<script type="math/tex; mode=display">f(x)=tanh(x)= \frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}</script>
+
+<h4 id="relu"><strong>relu</strong></h4>
+
+<script type="math/tex; mode=display">f(x)=max(0,x)</script>
+
+<p><img src="/home/dd/.config/Typora/typora-user-images/1541474023324.png" alt="1541474023324" /></p>

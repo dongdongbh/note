@@ -1,0 +1,126 @@
+<p>[TOC]</p>
+
+<h3 id="server-ip">Server ip</h3>
+
+<hr />
+
+<ol>
+  <li>
+    <p>首先登录跳板机172.16.101.136</p>
+  </li>
+  <li>
+    <p>lidd然后从跳板机访问172.16.0.248</p>
+  </li>
+</ol>
+
+<h3 id="port-forward">Port forward：</h3>
+
+<hr />
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -N -f -L 2222:172.16.0.248:22 lidd@172.16.101.136
+ssh lidd@localhost -p 2222
+</code></pre></div></div>
+
+<h3 id="to-connect-network">To connect network</h3>
+
+<hr />
+
+<ol>
+  <li><code class="highlighter-rouge">sudo vim /etc/resolvconf/resolv.conf.d/base</code></li>
+  <li>add ‘nameserver 8.8.8.8’ to file</li>
+  <li><code class="highlighter-rouge">resolvconf -u</code></li>
+</ol>
+
+<h3 id="ssh-key-setting">ssh key setting</h3>
+
+<hr />
+
+<p>​	You run the first command once to set up your public/private key pair and then you run the second command once for each host you want to connect to.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen
+ssh-copy-id <span class="nb">hostname</span>
+</code></pre></div></div>
+
+<p>or you can do it manually by append your local pub key to your server’s 1.  <code class="highlighter-rouge">~/.ssh/authorized_keys</code> file.</p>
+
+<p>for detais, refer <a href="http://www.linuxproblem.org/art_9.html">SSH login without password</a></p>
+
+<h3 id="sshfs-mount">sshfs mount</h3>
+
+<hr />
+
+<h5 id="mount">mount</h5>
+
+<p><code class="highlighter-rouge">sshfs lidd@localhost:/home/lidd /home/dd/remote -p 2222</code></p>
+
+<h5 id="unmount">unmount</h5>
+
+<p><code class="highlighter-rouge">fusermount -u /home/dd/remote</code> or <code class="highlighter-rouge">umount /home/dd/remote</code></p>
+
+<h4 id="auto-mount-on-start-up">auto mount on start up</h4>
+
+<p><em>note: this is very <strong>dangerous</strong>!!! if the network has some problem, then you can not turn on your computer since system cannot find remote disk</em></p>
+
+<p>add</p>
+
+<p><code class="highlighter-rouge">sshfs#lidd@localhost:/home/lidd /home/dd/remote -p 2222 fuse defaults,auto,allow_other 0 0</code></p>
+
+<p>to file ‘/etc/fstab’</p>
+
+<h3 id="transparent-multi-hop-ssh">Transparent Multi-hop SSH</h3>
+
+<hr />
+
+<ul>
+  <li>your computer: dd</li>
+  <li>your jump machine: jumper</li>
+  <li>remote server: g-server</li>
+</ul>
+
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">subl ~/.ssh/config</code></p>
+  </li>
+  <li>
+    <p>add following to it</p>
+
+    <blockquote>
+      <p>Host jumper
+​	user lidd
+​	HostName 172.16.101.136</p>
+
+      <p>Host g-server
+​	user lidd
+  	ProxyCommand ssh -q jumper nc -q0 172.16.0.248 22</p>
+    </blockquote>
+
+    <p>Then you can direct use</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh g-server
+ssh <span class="nt">-X</span> g-server
+scp path/to/local/file g-server:path/to/remote/file
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>improve speed</p>
+
+    <ul>
+      <li>
+        <p>mkdir ~/.ssh/tmpmkdir ~/.ssh/tmp</p>
+      </li>
+      <li>
+        <p>add these two lines <strong>at the start</strong> of your <code class="highlighter-rouge">~/.ssh/config</code> (make sure to use your username in place of ‘<em>YOUR-NAME</em>’):</p>
+      </li>
+    </ul>
+
+    <blockquote>
+      <p>ControlMaster auto
+ControlPath   /home/YOUR-NAME/.ssh/tmp/%h_%p_%r</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>for more info about jump host configuration, refer <a href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts">Jump Hosts</a></p>
+
+<p>ref. <a href="http://sshmenu.sourceforge.net/articles/">SSHMenu Articles</a></p>
+

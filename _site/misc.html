@@ -1,0 +1,35 @@
+<h2 id="no_pubkey-xxxxx-in-apt-update">NO_PUBKEY xxxxx in apt update</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-key adv <span class="nt">--keyserver</span> keyserver.ubuntu.com <span class="nt">--recv-keys</span> <span class="nb">sudo </span>apt-key adv <span class="nt">--keyserver</span> keyserver.ubuntu.com <span class="nt">--recv-keys</span> xxxxxxxx
+</code></pre></div></div>
+
+<h2 id="git-add-multiple-remote-repository">git add multiple remote repository</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add all <span class="nb">dd</span>@dongdongbh.tech:/srv/git/website.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all git@github.com:dongdongbh/dongdongbh.github.io.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all git@git.coding.net:dongdongbh/dongdongbh.coding.me.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all <span class="nb">dd</span>@dongdongbh.tech:/srv/git/website.git
+git remote <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>It will show as:</p>
+
+<blockquote>
+  <p>all	dd@dongdongbh.tech:/srv/git/website.git (fetch)
+all	git@github.com:dongdongbh/dongdongbh.github.io.git (push)
+all	git@git.coding.net:dongdongbh/dongdongbh.coding.me.git (push)
+all	dd@dongdongbh.tech:/srv/git/website.git (push)</p>
+</blockquote>
+
+<h2 id="run-command-in-background">run command in background</h2>
+
+<p>Use <code class="highlighter-rouge">nohup</code> if your background job takes a long time to finish or you just use SecureCRT or something like it login the server.</p>
+
+<p>Redirect the stdout and stderr to ‘‘/dev/null’ to ignore the output.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">nohup</span> /path/to/your/script.sh <span class="o">&gt;</span> /dev/null 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<p>Use <code class="highlighter-rouge">nohup</code> if your background job takes a long time to finish or you just use SecureCRT or something like it login the server.</p>
+
+<p>Redirect the stdout and stderr to /dev/null to ignore the output.</p>

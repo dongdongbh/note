@@ -1,0 +1,174 @@
+<h2 id="jupyter-and-tensorboard-configuration">jupyter and tensorboard configuration</h2>
+
+<h4 id="visit-jupyter-notebook-without-token-and-open-as-public-server">Visit jupyter notebook without token and open as public server</h4>
+
+<ol>
+  <li>
+    <p>on server run <code class="highlighter-rouge">jupyter notebook --generate-configjupyter notebook --generate-config</code></p>
+  </li>
+  <li>
+    <p>open <code class="highlighter-rouge">ipython</code> and run</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In [1]: from notebook.auth import passwd
+In [2]: passwd()
+Enter password: 
+Verify password: 
+Out[2]: 'sha1:ce23d945972f:34769685a7ccd3d08c84a18c63968a41f1140274'In [1]: from 
+</code></pre></div>    </div>
+
+    <p>Here, the password is for you to log in jupyer notebook to replace the random token on browser</p>
+  </li>
+  <li>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi ~/.jupyter/jupyter_notebook_config.py
+</code></pre></div>    </div>
+
+    <p>add following text to it</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Set ip to '0.0.0.0' to bind on all interfaces (ips) for the public server
+c.NotebookApp.ip = '0.0.0.0'
+c.NotebookApp.password = u'sha1:0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #the output of last step
+c.NotebookApp.open_browser = False
+c.NotebookApp.port =8889 #指定一个端口
+</code></pre></div>    </div>
+  </li>
+  <li>visit jupyter by https://localhost:8889 or https://serverip:8889 and input the password you set before and enjoy it!</li>
+</ol>
+
+<h4 id="tensorboard-open-as-public-server">tensorboard open as public server</h4>
+
+<p>run on server</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tensorboard --logdir=runs --host=0.0.0.0 --port=6006
+</code></pre></div></div>
+
+<h3 id="jupyter-notebook-and-tensorboard-on-remote">Jupyter notebook and tensorboard on remote</h3>
+
+<hr />
+
+<h3 id="if-you-configured-it-as-a-public-server">if you configured it as a public server</h3>
+
+<p>Set ip to <code class="highlighter-rouge">c.NotebookApp.ip = '0.0.0.0'</code> to bind on all interfaces (ips) for the <strong>public server</strong></p>
+
+<ul>
+  <li>
+    <h4 id="m1">M1</h4>
+  </li>
+</ul>
+
+<p>on your computer add following to ‘./ssh/config’</p>
+
+<blockquote>
+  <p>Host jupyter
+​	HostName 172.16.101.136
+​	LocalForward 8889 172.16.0.248:8889
+​	User lidd</p>
+
+  <p>Host tensorboard
+​	HostName 172.16.101.136
+​	LocalForward 8008 172.16.0.248:6006
+​	User lidd</p>
+</blockquote>
+
+<p>then run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -f -N jupyter
+ssh -f -N tensorboard
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h4 id="m2">M2</h4>
+  </li>
+</ul>
+
+<p>or just run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
+</code></pre></div></div>
+
+<h3 id="if-you-didnt-configure-it-as-a-public-server">if you didn’t configure it as a public server</h3>
+
+<blockquote>
+  <p>note: in this case, jupyter notebook only can be access by [localhost], so we must forward ssh tunnel twice</p>
+</blockquote>
+
+<h4 id="method-1">Method 1：</h4>
+
+<ol>
+  <li>
+    <p>on jumper :</p>
+
+    <p>add following to ‘./ssh/config’</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host jupyter_dd
+	HostName 172.16.0.248
+	LocalForward 10048 localhost:8889
+	User lidd
+Host tensorboard_dd 
+	HostName 172.16.0.248
+	LocalForward 10049 127.0.0.1:6006
+	User lidd
+</code></pre></div>    </div>
+
+    <p>and then run</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -f -N jupyter_dd
+ssh -f -N tensorboard_dd
+</code></pre></div>    </div>
+
+    <p>Here, I am not sure why tensorboard need ‘127.0.0.1’ but not ‘localhost’</p>
+  </li>
+  <li>
+    <p>on your computer add following to ‘./ssh/config’</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host jupyter
+	HostName 172.16.101.136
+	LocalForward 8889 localhost:10048
+	User lidd
+Host tensorboard
+	HostName 172.16.101.136
+	LocalForward 8008 localhost:10049
+	User lidd
+</code></pre></div>    </div>
+
+    <p>and then run</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> jupyter
+ssh <span class="nt">-f</span> <span class="nt">-N</span> tensorboard
+</code></pre></div>    </div>
+
+    <p>​</p>
+  </li>
+</ol>
+
+<h4 id="method-２">Method ２：</h4>
+
+<ol>
+  <li>
+    <p>on jumper :</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> <span class="nt">-L</span> 10048:localhost:8889 lidd@172.16.0.248
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>on your computer</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> <span class="nt">-L</span> 8889:localhost:10048 lidd@172.16.101.136
+</code></pre></div>    </div>
+
+    <p>then run jupyter notebook and tensorboard on server by running</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jupyter notebook <span class="nt">--no-browser</span> <span class="nt">--port</span><span class="o">=</span>8889 upyter notebook <span class="nt">--no-browser</span> <span class="nt">--port</span><span class="o">=</span>8889
+tensorboard <span class="nt">--logdir</span><span class="o">=</span>runs <span class="nt">--host</span> localhost 
+</code></pre></div>    </div>
+
+    <p>then you can visit jupyter by https://localhost:8889 and https://locahost:8008 , but you have to input token on jupyter</p>
+
+    <blockquote>
+      <p>notice: if you use relative dirctionary, you must <strong>run tensorboard in the dirctionary</strong>, otherwise tensorboard con’t find your log data to show</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>ref. <a href="http://sshmenu.sourceforge.net/articles/">SSHMenu Articles</a></p>
+

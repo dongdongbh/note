@@ -1,0 +1,95 @@
+<h2 id="expose-intranet-machine-to-outside">expose Intranet machine to outside</h2>
+
+<p><strong>condition</strong>: you have a Intranet machine(mabe the machine is in your company), and it do not have a pubic IP, and you want to visit your machine at your home or anywhere can connect Internet.</p>
+
+<p><strong>requirements</strong>: you need have a server with a public IP.</p>
+
+<p><strong>Howto</strong>:</p>
+
+<p>Here, we use a open source named <a href="https://github.com/fatedier/frphttps://github.com/fatedier/frp">frp</a>,   your can choose the version of your operate system and download it from <a href="https://github.com/fatedier/frp/releases">Github repo</a>.</p>
+
+<p>and we just describe the bash ssh function, more functions you can refer frp Readme file</p>
+
+<h2 id="ssh-usage">SSH Usage</h2>
+
+<p>Put <strong>frps</strong> and <strong>frps.ini</strong> to your server with public IP.</p>
+
+<p>Put <strong>frpc</strong> and <strong>frpc.ini</strong> to your server in LAN.</p>
+
+<h3 id="access-your-computer-in-lan-by-ssh">Access your computer in LAN by SSH</h3>
+
+<ol>
+  <li>Modify frps.ini:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># frps.ini
+[common]
+bind_port = 7000
+</code></pre></div></div>
+
+<ol>
+  <li>Start frps on background:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<ol>
+  <li>Modify frpc.ini, <code class="highlighter-rouge">server_addr</code> is your frps’s server IP:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># frpc.ini
+[common]
+server_addr = x.x.x.x
+server_port = 7000
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 6000
+</code></pre></div></div>
+
+<ol>
+  <li>Start frpc:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./frpc -c ./frpc.ini
+</code></pre></div></div>
+
+<ol>
+  <li>Connect to server in LAN by ssh assuming that username is test:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -oPort=6000 test@x.x.x.x
+</code></pre></div></div>
+
+<p><strong>Notice</strong>:</p>
+
+<ul>
+  <li>you must open your port used in frs( eg. 7000,6000) on your server, usually it is on the setting of firewall rules.</li>
+  <li>Every client need one <strong>remote_port</strong> to map.</li>
+</ul>
+
+<p>and if you want to visit Jupyter notebook and tensorboard, you only need to add a new port to frpc, and then visit https://x.x.x.x:port</p>
+
+<h2 id="ssh-on-your-mobile-phone">ssh on your mobile phone</h2>
+
+<p>here we just describe the method on IOS. we use a software named Termius, the basic ssh function of it is free.</p>
+
+<ol>
+  <li>open the Termius</li>
+  <li>Hosts—&gt;add new—-&gt;input you remote ip, ssh username, password and save it</li>
+  <li>just connect the host</li>
+</ol>
+
+<p>if you’d like to use ssh on Termius,</p>
+
+<ol>
+  <li>open the Termius</li>
+  <li>Keychain—&gt;add key(or use existed one)</li>
+  <li>edit it and copy the public key</li>
+  <li>append the Termius public key  to your server’s <code class="highlighter-rouge">~/.ssh/authorized_keys</code> file</li>
+  <li>on Termius, edit your host and add the key your created in Keychain ,and then save it</li>
+  <li>connect server and enjoy it!</li>
+</ol>

@@ -17,23 +17,19 @@
     
   
     
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
+  
+    
     <li><a href='#/git-tutorial'>git tutorial </a></li>
-    
-  
-    
-    <li><a href='#/response-status-codes'>Response status codes</a></li>
-    
-  
-    
-    <li><a href='#/authentication'>Authenticate</a></li>
-    
-  
-    
-  
-    
-  
-    
-  
     
   
   
@@ -45,17 +41,33 @@
       
     
               
-        <li class='shortcuts'><a href='#/tmux'>tmux</a></li>
+        <li class='TIPS'><a href='#/expose-Intranet'>expose Intranet</a></li>
               
-        <li class='DELETE'><a href='#/test'>test</a></li>
+        <li class='TIPS'><a href='#/python'>python</a></li>
               
-        <li class='GET'><a href='#/get-stuff'>Get stuff</a></li>
+        <li class='MISC'><a href='#/misc'>misc</a></li>
               
-        <li class='POST'><a href='#/post-a-thing'>Post a thing</a></li>
+        <li class='TIPS'><a href='#/server'>server</a></li>
               
-        <li class='PUT'><a href='#/put-a-thing'>Update a thing</a></li>
+        <li class='TIPS'><a href='#/remote-visit-https'>remote visit https(jb)</a></li>
               
-        <li class='DELETE'><a href='#/delete-a-thing'>Delete a thing</a></li>
+        <li class='TIPS'><a href='#/TMUX'>tmux</a></li>
+              
+        <li class='TIPS'><a href='#/test'>test</a></li>
+      
+    
+    </ul>
+  </li>
+
+  <li><h2>Knowlege</h2>
+    <ul>
+    
+              
+        <li class=''><a href='#'></a></li>
+      
+    
+              
+        <li class='TIPS'><a href='#/RL-note'>Reinforcement learning</a></li>
       
     
     </ul>
@@ -66,236 +78,600 @@
 
 <section id='content'>
 
-  <article class='shortcuts'>
-    <a name='/tmux' href='#/tmux'><h2><code><b>shortcuts</b> _posts/2018-10-24-tmux.md</code> tmux</h2></a>
+  <article class='TIPS'>
+    <a name='/expose-Intranet' href='#/expose-Intranet'><h2><code><b>TIPS</b> _posts/2018-11-07-expose-Intranet.md</code> expose Intranet</h2></a>
     <section class='body'>
-      <p>注意：本文内容适用于 Tmux 2.3 及以上的版本，但是绝大部分的特性低版本也都适用，鼠标支持、VI 模式、插件管理在低版本可能会与本文不兼容。</p>
+      <h2 id="expose-intranet-machine-to-outside">expose Intranet machine to outside</h2>
 
-<h1 id="tmux-快捷键--速查表">Tmux 快捷键 &amp; 速查表</h1>
+<p><strong>condition</strong>: you have a Intranet machine(mabe the machine is in your company), and it do not have a pubic IP, and you want to visit your machine at your home or anywhere can connect Internet.</p>
 
-<p>启动新会话：</p>
+<p><strong>requirements</strong>: you need have a server with a public IP.</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux [new -s 会话名 -n 窗口名]
+<p><strong>Howto</strong>:</p>
+
+<p>Here, we use a open source named <a href="https://github.com/fatedier/frphttps://github.com/fatedier/frp">frp</a>,   your can choose the version of your operate system and download it from <a href="https://github.com/fatedier/frp/releases">Github repo</a>.</p>
+
+<p>and we just describe the bash ssh function, more functions you can refer frp Readme file</p>
+
+<h2 id="ssh-usage">SSH Usage</h2>
+
+<p>Put <strong>frps</strong> and <strong>frps.ini</strong> to your server with public IP.</p>
+
+<p>Put <strong>frpc</strong> and <strong>frpc.ini</strong> to your server in LAN.</p>
+
+<h3 id="access-your-computer-in-lan-by-ssh">Access your computer in LAN by SSH</h3>
+
+<ol>
+  <li>Modify frps.ini:</li>
+</ol>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># frps.ini
+[common]
+bind_port = 7000
 </code></pre></div></div>
 
-<p>恢复会话：</p>
+<ol>
+  <li>Start frps on background:</li>
+</ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux at [-t 会话名]
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nohup ./frps -c ./frps.ini &gt; /dev/null 2&gt;&amp;1 &amp;
 </code></pre></div></div>
 
-<p>列出所有会话：</p>
+<ol>
+  <li>Modify frpc.ini, <code class="highlighter-rouge">server_addr</code> is your frps’s server IP:</li>
+</ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux ls
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># frpc.ini
+[common]
+server_addr = x.x.x.x
+server_port = 7000
+
+[ssh]
+type = tcp
+local_ip = 127.0.0.1
+local_port = 22
+remote_port = 6000
 </code></pre></div></div>
 
-<p><a name="killSessions"></a>关闭会话：</p>
+<ol>
+  <li>Start frpc:</li>
+</ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux kill-session -t 会话名
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./frpc -c ./frpc.ini
 </code></pre></div></div>
 
-<p><a name="killAllSessions"></a>关闭所有会话：</p>
+<ol>
+  <li>Connect to server in LAN by ssh assuming that username is test:</li>
+</ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tmux ls | grep : | cut -d. -f1 | awk '{print substr($1, 0, length($1)-1)}' | xargs kill
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -oPort=6000 test@x.x.x.x
 </code></pre></div></div>
 
-<h1 id="在-tmux-中按下-tmux-前缀-ctrlb然后">在 Tmux 中，按下 Tmux 前缀 <code class="highlighter-rouge">ctrl+b</code>，然后：</h1>
+<p><strong>Notice</strong>:</p>
 
-<h2 id="会话">会话</h2>
+<ul>
+  <li>you must open your port used in frs( eg. 7000,6000) on your server, usually it is on the setting of firewall rules.</li>
+  <li>Every client need one <strong>remote_port</strong> to map.</li>
+</ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:new&lt;回车&gt;  启动新会话
-s           列出所有会话
-$           重命名当前会话
-</code></pre></div></div>
+<p>and if you want to visit Jupyter notebook and tensorboard, you only need to add a new port to frpc, and then visit https://x.x.x.x:port</p>
 
-<h2 id="窗口-标签页"><a name="WindowsTabs"></a>窗口 (标签页)</h2>
+<h2 id="ssh-on-your-mobile-phone">ssh on your mobile phone</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>c  创建新窗口
-w  列出所有窗口
-n  后一个窗口
-p  前一个窗口
-f  查找窗口
-,  重命名当前窗口
-&amp;  关闭当前窗口
-</code></pre></div></div>
+<p>here we just describe the method on IOS. we use a software named Termius, the basic ssh function of it is free.</p>
 
-<h2 id="调整窗口排序">调整窗口排序</h2>
+<ol>
+  <li>open the Termius</li>
+  <li>Hosts—&gt;add new—-&gt;input you remote ip, ssh username, password and save it</li>
+  <li>just connect the host</li>
+</ol>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>swap-window -s 3 -t 1  交换 3 号和 1 号窗口
-swap-window -t 1       交换当前和 1 号窗口
-move-window -t 1       移动当前窗口到 1 号
-</code></pre></div></div>
+<p>if you’d like to use ssh on Termius,</p>
 
-<h2 id="窗格分割窗口"><a name="PanesSplits"></a>窗格（分割窗口）</h2>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>%  垂直分割
-"  水平分割
-o  交换窗格
-x  关闭窗格
-⍽  左边这个符号代表空格键 - 切换布局
-q 显示每个窗格是第几个，当数字出现的时候按数字几就选中第几个窗格
-{ 与上一个窗格交换位置
-} 与下一个窗格交换位置
-z 切换窗格最大化/最小化
-</code></pre></div></div>
-
-<h2 id="同步窗格"><a name="syncPanes"></a>同步窗格</h2>
-
-<p>这么做可以切换到想要的窗口，输入 Tmux 前缀和一个冒号呼出命令提示行，然后输入：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>:setw synchronize-panes
-</code></pre></div></div>
-
-<p>你可以指定开或关，否则重复执行命令会在两者间切换。
-这个选项值针对某个窗口有效，不会影响别的会话和窗口。
-完事儿之后再次执行命令来关闭。<a href="http://blog.sanctum.geek.nz/sync-tmux-panes/">帮助</a></p>
-
-<h2 id="调整窗格尺寸">调整窗格尺寸</h2>
-
-<p>如果你不喜欢默认布局，可以重调窗格的尺寸。虽然这很容易实现，但一般不需要这么干。这几个命令用来调整窗格：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>PREFIX : resize-pane -D          当前窗格向下扩大 1 格
-PREFIX : resize-pane -U          当前窗格向上扩大 1 格
-PREFIX : resize-pane -L          当前窗格向左扩大 1 格
-PREFIX : resize-pane -R          当前窗格向右扩大 1 格
-PREFIX : resize-pane -D 20       当前窗格向下扩大 20 格
-PREFIX : resize-pane -t 2 -L 20  编号为 2 的窗格向左扩大 20 格
-</code></pre></div></div>
-
-<h2 id="文本复制模式">文本复制模式：</h2>
-
-<p>按下<strong>前缀 [</strong>进入文本复制模式。可以使用方向键在屏幕中移动光标。默认情况下，方向键是启用的。在配置文件中启用 Vim 键盘布局来切换窗口、调整窗格大小。Tmux 也支持 Vi 模式。要是想启用 Vi 模式，只需要把下面这一行添加到 .tmux.conf 中：</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>setw -g mode-keys vi
-</code></pre></div></div>
-
-<p>启用这条配置后，就可以使用 h、j、k、l 来移动光标了。</p>
-
-<p>想要退出文本复制模式的话，按下回车键就可以了。一次移动一格效率低下，在 Vi 模式启用的情况下，可以辅助一些别的快捷键高效工作。</p>
-
-<p>例如，可以使用 w 键逐词移动，使用 b 键逐词回退。使用 f 键加上任意字符跳转到当前行第一次出现该字符的位置，使用 F 键达到相反的效果。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi             emacs        功能
-^              M-m          反缩进
-Escape         C-g          清除选定内容
-Enter          M-w          复制选定内容
-j              Down         光标下移
-h              Left         光标左移
-l              Right        光标右移
-L                           光标移到尾行
-M              M-r          光标移到中间行
-H              M-R          光标移到首行
-k              Up           光标上移
-d              C-u          删除整行
-D              C-k          删除到行末
-$              C-e          移到行尾
-:              g            前往指定行
-C-d            M-Down       向下滚动半屏
-C-u            M-Up         向上滚动半屏
-C-f            Page down    下一页
-w              M-f          下一个词
-p              C-y          粘贴
-C-b            Page up      上一页
-b              M-b          上一个词
-q              Escape       退出
-C-Down or J    C-Down       向下翻
-C-Up or K      C-Up         向下翻
-n              n            继续搜索
-?              C-r          向前搜索
-/              C-s          向后搜索
-0              C-a          移到行首
-Space          C-Space      开始选中
-               C-t          字符调序
-</code></pre></div></div>
-
-<h2 id="杂项">杂项：</h2>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>d  退出 tmux（tmux 仍在后台运行）
-t  窗口中央显示一个数字时钟
-?  列出所有快捷键
-:  命令提示符
-</code></pre></div></div>
-
-<h2 id="配置选项">配置选项：</h2>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># 鼠标支持 - 设置为 on 来启用鼠标(与 2.1 之前的版本有区别，请自行查阅 man page)
-* set -g mouse on
-
-# 设置默认终端模式为 256color
-set -g default-terminal "screen-256color"
-
-# 启用活动警告
-setw -g monitor-activity on
-set -g visual-activity on
-
-# 居中窗口列表
-set -g status-justify centre
-
-# 最大化/恢复窗格
-unbind Up bind Up new-window -d -n tmp \; swap-pane -s tmp.1 \; select-window -t tmp
-unbind Down
-bind Down last-window \; swap-pane -s tmp.1 \; kill-window -t tmp
-</code></pre></div></div>
-
-<h2 id="参考配置文件tmuxconf">参考配置文件（~/.tmux.conf）：</h2>
-
-<p>下面这份配置是我使用 Tmux 几年来逐渐精简后的配置，请自取。</p>
-
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># -----------------------------------------------------------------------------</span>
-<span class="c"># Tmux 基本配置 - 要求 Tmux &gt;= 2.3</span>
-<span class="c"># 如果不想使用插件，只需要将此节的内容写入 ~/.tmux.conf 即可</span>
-<span class="c"># -----------------------------------------------------------------------------</span>
-
-<span class="c"># C-b 和 VIM 冲突，修改 Prefix 组合键为 Control-Z，按键距离近</span>
-<span class="nb">set</span> <span class="nt">-g</span> prefix C-z
-
-<span class="nb">set</span> <span class="nt">-g</span> base-index         1     <span class="c"># 窗口编号从 1 开始计数</span>
-<span class="nb">set</span> <span class="nt">-g</span> display-panes-time 10000 <span class="c"># PREFIX-Q 显示编号保留时间，单位 ms</span>
-<span class="nb">set</span> <span class="nt">-g</span> mouse              on    <span class="c"># 开启鼠标</span>
-<span class="nb">set</span> <span class="nt">-g</span> pane-base-index    1     <span class="c"># 窗格编号从 1 开始计数</span>
-<span class="nb">set</span> <span class="nt">-g</span> renumber-windows   on    <span class="c"># 关掉某个窗口后，编号重排</span>
-
-setw <span class="nt">-g</span> allow-rename      off   <span class="c"># 禁止活动进程修改窗口名</span>
-setw <span class="nt">-g</span> automatic-rename  off   <span class="c"># 禁止自动命名新窗口</span>
-setw <span class="nt">-g</span> mode-keys         vi    <span class="c"># 进入复制模式的时候使用 vi 键位（默认是 EMACS）</span>
-
-<span class="c"># -----------------------------------------------------------------------------</span>
-<span class="c"># 使用插件 - via tpm</span>
-<span class="c">#   1. 执行 git clone https://github.com/tmux-plugins/tpm ~/.tmux/plugins/tpm</span>
-<span class="c">#   2. 执行 bash ~/.tmux/plugins/tpm/bin/install_plugins</span>
-<span class="c"># -----------------------------------------------------------------------------</span>
-
-setenv <span class="nt">-g</span> TMUX_PLUGIN_MANAGER_PATH <span class="s1">'~/.tmux/plugins'</span>
-
-<span class="c"># 推荐的插件（请去每个插件的仓库下读一读使用教程）</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'seebi/tmux-colors-solarized'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tmux-pain-control'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tmux-prefix-highlight'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tmux-resurrect'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tmux-sensible'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tmux-yank'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @plugin <span class="s1">'tmux-plugins/tpm'</span>
-
-<span class="c"># tmux-resurrect</span>
-<span class="nb">set</span> <span class="nt">-g</span> @resurrect-dir <span class="s1">'~/.tmux/resurrect'</span>
-
-<span class="c"># tmux-prefix-highlight</span>
-<span class="nb">set</span> <span class="nt">-g</span> status-right <span class="s1">'#{prefix_highlight} #H | %a %Y-%m-%d %H:%M'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @prefix_highlight_show_copy_mode <span class="s1">'on'</span>
-<span class="nb">set</span> <span class="nt">-g</span> @prefix_highlight_copy_mode_attr <span class="s1">'fg=white,bg=blue'</span>
-
-<span class="c"># 初始化 TPM 插件管理器 (放在配置文件的最后)</span>
-run <span class="s1">'~/.tmux/plugins/tpm/tpm'</span>
-
-<span class="c"># -----------------------------------------------------------------------------</span>
-<span class="c"># 结束</span>
-<span class="c"># -----------------------------------------------------------------------------</span>
-</code></pre></div></div>
+<ol>
+  <li>open the Termius</li>
+  <li>Keychain—&gt;add key(or use existed one)</li>
+  <li>edit it and copy the public key</li>
+  <li>append the Termius public key  to your server’s <code class="highlighter-rouge">~/.ssh/authorized_keys</code> file</li>
+  <li>on Termius, edit your host and add the key your created in Keychain ,and then save it</li>
+  <li>connect server and enjoy it!</li>
+</ol>
 
     </section>
   </article>
 
-  <article class='DELETE'>
-    <a name='/test' href='#/test'><h2><code><b>DELETE</b> _posts/2018-10-24-test.md</code> test</h2></a>
+  <article class='TIPS'>
+    <a name='/RL-note' href='#/RL-note'><h2><code><b>TIPS</b> _posts/2018-11-06-RL-note.md</code> Reinforcement learning</h2></a>
+    <section class='body'>
+      <h2 id="rl-note">RL note</h2>
+
+<h3 id="classification">classification</h3>
+
+<ul>
+  <li>model-based: previous observation <strong>predict</strong> following rewards and observations</li>
+  <li>model-free: train it by intuition</li>
+  <li>police-based: <strong>directly</strong> approximating the policy of the agent</li>
+  <li>value-based: the agent calculates the <strong>value of every possible action</strong></li>
+  <li>off police: the ability of the method to learn on old <strong>historical data</strong> (obtained</li>
+  <li>on police: requires <strong>fresh data</strong> obtained from the environment</li>
+</ul>
+
+<h2 id="police-based-method">Police-based method</h2>
+
+<p><strong>just like a classification problem</strong></p>
+
+<ul>
+  <li>NN input: observation</li>
+  <li>NN output: distribution of actions</li>
+  <li>agent: random choose action base on distribution of actions(police)</li>
+</ul>
+
+<h4 id="cross-entropy-method">cross-entropy method</h4>
+
+<ol>
+  <li>Play N number of episodes using our current model and environment.</li>
+  <li>Calculate the total reward for every episode and decide on a reward boundary. Usually, we use some percentile of all rewards, such as 50th or 70th.</li>
+  <li>Throw away all episodes with a reward below the boundary.</li>
+  <li>Train on the remaining “elite” episodes using observations as the input and issued actions as the desired output.</li>
+  <li>Repeat from step 1 until we become satisfied with the result.</li>
+</ol>
+
+<p>use <strong>cross-entropy loss</strong> function as loss fuction</p>
+
+<h3 id="nn">NN</h3>
+
+<h4 id="sigmoid">sigmoid</h4>
+
+<p><em><u>It transfer a value input to (0,1)</u></em></p>
+
+<script type="math/tex; mode=display">f(x)=\frac{L}{1+e^{-x}} = \frac{e^{x}}{e{x}+1}</script>
+
+<h4 id="softmax"><strong>softmax</strong></h4>
+
+<p>In short, <em><u>It transfer K-dimensional vector input to (0,1)</u></em></p>
+
+<p>In mathematics, the softmax function, or normalized exponential function, is a generalization of the logistic function that “squashes” a K-dimensional vector <strong>z</strong>  of arbitrary real values to a K-dimensional vector  \sigma(<strong>z</strong>) of real values, where each entry is in the range (0, 1), and all the entries add up to 1.</p>
+
+<h4 id="tanh">tanh</h4>
+
+<p><em><u>It transfer a value input to (-1,1)</u></em></p>
+
+<script type="math/tex; mode=display">f(x)=tanh(x)= \frac{e^{x}-e^{-x}}{e^{x}+e^{-x}}</script>
+
+<h4 id="relu"><strong>relu</strong></h4>
+
+<script type="math/tex; mode=display">f(x)=max(0,x)</script>
+
+<p><img src="/home/dd/.config/Typora/typora-user-images/1541474023324.png" alt="1541474023324" /></p>
+
+    </section>
+  </article>
+
+  <article class='TIPS'>
+    <a name='/python' href='#/python'><h2><code><b>TIPS</b> _posts/2018-11-05-python.md</code> python</h2></a>
+    <section class='body'>
+      <h2 id="python-managers">python managers</h2>
+
+<h3 id="python-version-manage">python version manage</h3>
+
+<ul>
+  <li><a href="https://github.com/pyenv/pyenvhttps://github.com/pyenv/pyenv">pyenv</a>  and the commands can find <a href="https://github.com/pyenv/pyenv/blob/master/COMMANDS.md">here</a></li>
+  <li><a href="https://docs.anaconda.com/">Anaconda</a></li>
+</ul>
+
+<h3 id="python-package-manager">python package manager</h3>
+
+<ul>
+  <li><a href="https://pip.pypa.io/en/stable/installing/">pip</a></li>
+  <li><a href="https://conda.io/docs/">conda</a></li>
+</ul>
+
+<h3 id="python-virtual-environment">python virtual environment</h3>
+
+<ul>
+  <li>
+    <p><a href="https://virtualenv.pypa.io/en/latest/">virtualenv</a>—<a href="https://virtualenv.pypa.io/en/latest/userguide/">tutorial</a></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>virtualenv ENV
+<span class="nb">source</span> /path/to/ENV/bin/activate
+deactivate
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>conda—<a href="https://conda.io/docs/user-guide/getting-started.html#managing-envs">tutorial</a></p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>conda create <span class="nt">--name</span> env_name package
+<span class="nb">source </span>activate env_name
+<span class="nb">source </span>deactivate
+</code></pre></div>    </div>
+  </li>
+</ul>
+
+
+    </section>
+  </article>
+
+  <article class='MISC'>
+    <a name='/misc' href='#/misc'><h2><code><b>MISC</b> _posts/2018-11-05-misc.md</code> misc</h2></a>
+    <section class='body'>
+      <h2 id="no_pubkey-xxxxx-in-apt-update">NO_PUBKEY xxxxx in apt update</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">sudo </span>apt-key adv <span class="nt">--keyserver</span> keyserver.ubuntu.com <span class="nt">--recv-keys</span> <span class="nb">sudo </span>apt-key adv <span class="nt">--keyserver</span> keyserver.ubuntu.com <span class="nt">--recv-keys</span> xxxxxxxx
+</code></pre></div></div>
+
+<h2 id="git-add-multiple-remote-repository">git add multiple remote repository</h2>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git remote add all <span class="nb">dd</span>@dongdongbh.tech:/srv/git/website.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all git@github.com:dongdongbh/dongdongbh.github.io.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all git@git.coding.net:dongdongbh/dongdongbh.coding.me.git
+git remote set-url <span class="nt">--add</span> <span class="nt">--push</span> all <span class="nb">dd</span>@dongdongbh.tech:/srv/git/website.git
+git remote <span class="nt">-v</span>
+</code></pre></div></div>
+
+<p>It will show as:</p>
+
+<blockquote>
+  <p>all	dd@dongdongbh.tech:/srv/git/website.git (fetch)
+all	git@github.com:dongdongbh/dongdongbh.github.io.git (push)
+all	git@git.coding.net:dongdongbh/dongdongbh.coding.me.git (push)
+all	dd@dongdongbh.tech:/srv/git/website.git (push)</p>
+</blockquote>
+
+<h2 id="run-command-in-background">run command in background</h2>
+
+<p>Use <code class="highlighter-rouge">nohup</code> if your background job takes a long time to finish or you just use SecureCRT or something like it login the server.</p>
+
+<p>Redirect the stdout and stderr to ‘‘/dev/null’ to ignore the output.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">nohup</span> /path/to/your/script.sh <span class="o">&gt;</span> /dev/null 2&gt;&amp;1 &amp;
+</code></pre></div></div>
+
+<p>Use <code class="highlighter-rouge">nohup</code> if your background job takes a long time to finish or you just use SecureCRT or something like it login the server.</p>
+
+<p>Redirect the stdout and stderr to /dev/null to ignore the output.</p>
+
+    </section>
+  </article>
+
+  <article class='TIPS'>
+    <a name='/server' href='#/server'><h2><code><b>TIPS</b> _posts/2018-11-02-server.md</code> server</h2></a>
+    <section class='body'>
+      <p>[TOC]</p>
+
+<h3 id="server-ip">Server ip</h3>
+
+<hr />
+
+<ol>
+  <li>
+    <p>首先登录跳板机172.16.101.136</p>
+  </li>
+  <li>
+    <p>lidd然后从跳板机访问172.16.0.248</p>
+  </li>
+</ol>
+
+<h3 id="port-forward">Port forward：</h3>
+
+<hr />
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -N -f -L 2222:172.16.0.248:22 lidd@172.16.101.136
+ssh lidd@localhost -p 2222
+</code></pre></div></div>
+
+<h3 id="to-connect-network">To connect network</h3>
+
+<hr />
+
+<ol>
+  <li><code class="highlighter-rouge">sudo vim /etc/resolvconf/resolv.conf.d/base</code></li>
+  <li>add ‘nameserver 8.8.8.8’ to file</li>
+  <li><code class="highlighter-rouge">resolvconf -u</code></li>
+</ol>
+
+<h3 id="ssh-key-setting">ssh key setting</h3>
+
+<hr />
+
+<p>​	You run the first command once to set up your public/private key pair and then you run the second command once for each host you want to connect to.</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh-keygen
+ssh-copy-id <span class="nb">hostname</span>
+</code></pre></div></div>
+
+<p>or you can do it manually by append your local pub key to your server’s 1.  <code class="highlighter-rouge">~/.ssh/authorized_keys</code> file.</p>
+
+<p>for detais, refer <a href="http://www.linuxproblem.org/art_9.html">SSH login without password</a></p>
+
+<h3 id="sshfs-mount">sshfs mount</h3>
+
+<hr />
+
+<h5 id="mount">mount</h5>
+
+<p><code class="highlighter-rouge">sshfs lidd@localhost:/home/lidd /home/dd/remote -p 2222</code></p>
+
+<h5 id="unmount">unmount</h5>
+
+<p><code class="highlighter-rouge">fusermount -u /home/dd/remote</code> or <code class="highlighter-rouge">umount /home/dd/remote</code></p>
+
+<h4 id="auto-mount-on-start-up">auto mount on start up</h4>
+
+<p><em>note: this is very <strong>dangerous</strong>!!! if the network has some problem, then you can not turn on your computer since system cannot find remote disk</em></p>
+
+<p>add</p>
+
+<p><code class="highlighter-rouge">sshfs#lidd@localhost:/home/lidd /home/dd/remote -p 2222 fuse defaults,auto,allow_other 0 0</code></p>
+
+<p>to file ‘/etc/fstab’</p>
+
+<h3 id="transparent-multi-hop-ssh">Transparent Multi-hop SSH</h3>
+
+<hr />
+
+<ul>
+  <li>your computer: dd</li>
+  <li>your jump machine: jumper</li>
+  <li>remote server: g-server</li>
+</ul>
+
+<ol>
+  <li>
+    <p><code class="highlighter-rouge">subl ~/.ssh/config</code></p>
+  </li>
+  <li>
+    <p>add following to it</p>
+
+    <blockquote>
+      <p>Host jumper
+​	user lidd
+​	HostName 172.16.101.136</p>
+
+      <p>Host g-server
+​	user lidd
+  	ProxyCommand ssh -q jumper nc -q0 172.16.0.248 22</p>
+    </blockquote>
+
+    <p>Then you can direct use</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh g-server
+ssh <span class="nt">-X</span> g-server
+scp path/to/local/file g-server:path/to/remote/file
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>improve speed</p>
+
+    <ul>
+      <li>
+        <p>mkdir ~/.ssh/tmpmkdir ~/.ssh/tmp</p>
+      </li>
+      <li>
+        <p>add these two lines <strong>at the start</strong> of your <code class="highlighter-rouge">~/.ssh/config</code> (make sure to use your username in place of ‘<em>YOUR-NAME</em>’):</p>
+      </li>
+    </ul>
+
+    <blockquote>
+      <p>ControlMaster auto
+ControlPath   /home/YOUR-NAME/.ssh/tmp/%h_%p_%r</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>for more info about jump host configuration, refer <a href="https://en.wikibooks.org/wiki/OpenSSH/Cookbook/Proxies_and_Jump_Hosts">Jump Hosts</a></p>
+
+<p>ref. <a href="http://sshmenu.sourceforge.net/articles/">SSHMenu Articles</a></p>
+
+
+    </section>
+  </article>
+
+  <article class='TIPS'>
+    <a name='/remote-visit-https' href='#/remote-visit-https'><h2><code><b>TIPS</b> _posts/2018-11-02-remote-visit-https.md</code> remote visit https(jb)</h2></a>
+    <section class='body'>
+      <h2 id="jupyter-and-tensorboard-configuration">jupyter and tensorboard configuration</h2>
+
+<h4 id="visit-jupyter-notebook-without-token-and-open-as-public-server">Visit jupyter notebook without token and open as public server</h4>
+
+<ol>
+  <li>
+    <p>on server run <code class="highlighter-rouge">jupyter notebook --generate-configjupyter notebook --generate-config</code></p>
+  </li>
+  <li>
+    <p>open <code class="highlighter-rouge">ipython</code> and run</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>In [1]: from notebook.auth import passwd
+In [2]: passwd()
+Enter password: 
+Verify password: 
+Out[2]: 'sha1:ce23d945972f:34769685a7ccd3d08c84a18c63968a41f1140274'In [1]: from 
+</code></pre></div>    </div>
+
+    <p>Here, the password is for you to log in jupyer notebook to replace the random token on browser</p>
+  </li>
+  <li>
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>vi ~/.jupyter/jupyter_notebook_config.py
+</code></pre></div>    </div>
+
+    <p>add following text to it</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Set ip to '0.0.0.0' to bind on all interfaces (ips) for the public server
+c.NotebookApp.ip = '0.0.0.0'
+c.NotebookApp.password = u'sha1:0xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx' #the output of last step
+c.NotebookApp.open_browser = False
+c.NotebookApp.port =8889 #指定一个端口
+</code></pre></div>    </div>
+  </li>
+  <li>visit jupyter by https://localhost:8889 or https://serverip:8889 and input the password you set before and enjoy it!</li>
+</ol>
+
+<h4 id="tensorboard-open-as-public-server">tensorboard open as public server</h4>
+
+<p>run on server</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tensorboard --logdir=runs --host=0.0.0.0 --port=6006
+</code></pre></div></div>
+
+<h3 id="jupyter-notebook-and-tensorboard-on-remote">Jupyter notebook and tensorboard on remote</h3>
+
+<hr />
+
+<h3 id="if-you-configured-it-as-a-public-server">if you configured it as a public server</h3>
+
+<p>Set ip to <code class="highlighter-rouge">c.NotebookApp.ip = '0.0.0.0'</code> to bind on all interfaces (ips) for the <strong>public server</strong></p>
+
+<ul>
+  <li>
+    <h4 id="m1">M1</h4>
+  </li>
+</ul>
+
+<p>on your computer add following to ‘./ssh/config’</p>
+
+<blockquote>
+  <p>Host jupyter
+​	HostName 172.16.101.136
+​	LocalForward 8889 172.16.0.248:8889
+​	User lidd</p>
+
+  <p>Host tensorboard
+​	HostName 172.16.101.136
+​	LocalForward 8008 172.16.0.248:6006
+​	User lidd</p>
+</blockquote>
+
+<p>then run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -f -N jupyter
+ssh -f -N tensorboard
+</code></pre></div></div>
+
+<ul>
+  <li>
+    <h4 id="m2">M2</h4>
+  </li>
+</ul>
+
+<p>or just run</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
+</code></pre></div></div>
+
+<h3 id="if-you-didnt-configure-it-as-a-public-server">if you didn’t configure it as a public server</h3>
+
+<blockquote>
+  <p>note: in this case, jupyter notebook only can be access by [localhost], so we must forward ssh tunnel twice</p>
+</blockquote>
+
+<h4 id="method-1">Method 1：</h4>
+
+<ol>
+  <li>
+    <p>on jumper :</p>
+
+    <p>add following to ‘./ssh/config’</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host jupyter_dd
+	HostName 172.16.0.248
+	LocalForward 10048 localhost:8889
+	User lidd
+Host tensorboard_dd 
+	HostName 172.16.0.248
+	LocalForward 10049 127.0.0.1:6006
+	User lidd
+</code></pre></div>    </div>
+
+    <p>and then run</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh -f -N jupyter_dd
+ssh -f -N tensorboard_dd
+</code></pre></div>    </div>
+
+    <p>Here, I am not sure why tensorboard need ‘127.0.0.1’ but not ‘localhost’</p>
+  </li>
+  <li>
+    <p>on your computer add following to ‘./ssh/config’</p>
+
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host jupyter
+	HostName 172.16.101.136
+	LocalForward 8889 localhost:10048
+	User lidd
+Host tensorboard
+	HostName 172.16.101.136
+	LocalForward 8008 localhost:10049
+	User lidd
+</code></pre></div>    </div>
+
+    <p>and then run</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> jupyter
+ssh <span class="nt">-f</span> <span class="nt">-N</span> tensorboard
+</code></pre></div>    </div>
+
+    <p>​</p>
+  </li>
+</ol>
+
+<h4 id="method-２">Method ２：</h4>
+
+<ol>
+  <li>
+    <p>on jumper :</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> <span class="nt">-L</span> 10048:localhost:8889 lidd@172.16.0.248
+</code></pre></div>    </div>
+  </li>
+  <li>
+    <p>on your computer</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh <span class="nt">-f</span> <span class="nt">-N</span> <span class="nt">-L</span> 8889:localhost:10048 lidd@172.16.101.136
+</code></pre></div>    </div>
+
+    <p>then run jupyter notebook and tensorboard on server by running</p>
+
+    <div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>jupyter notebook <span class="nt">--no-browser</span> <span class="nt">--port</span><span class="o">=</span>8889 upyter notebook <span class="nt">--no-browser</span> <span class="nt">--port</span><span class="o">=</span>8889
+tensorboard <span class="nt">--logdir</span><span class="o">=</span>runs <span class="nt">--host</span> localhost 
+</code></pre></div>    </div>
+
+    <p>then you can visit jupyter by https://localhost:8889 and https://locahost:8008 , but you have to input token on jupyter</p>
+
+    <blockquote>
+      <p>notice: if you use relative dirctionary, you must <strong>run tensorboard in the dirctionary</strong>, otherwise tensorboard con’t find your log data to show</p>
+    </blockquote>
+  </li>
+</ol>
+
+<p>ref. <a href="http://sshmenu.sourceforge.net/articles/">SSHMenu Articles</a></p>
+
+
+    </section>
+  </article>
+
+  <article class='TIPS'>
+    <a name='/TMUX' href='#/TMUX'><h2><code><b>TIPS</b> _posts/2018-11-02-TMUX.md</code> tmux</h2></a>
+    <section class='body'>
+      <h1 id="tmux">TMUX</h1>
+
+<h3 id="install">install</h3>
+
+<p>sudo apt install tmux</p>
+
+<p>creat config file: <code class="highlighter-rouge">subl /.tmux.conf</code></p>
+
+<h3 id="config">config</h3>
+
+<ol>
+  <li>install ‘TMUX plugin manager(TPM)’  see TPM github for detail</li>
+  <li>for copy to system clipboard—install ‘tmux-yank’ plugin</li>
+  <li>other configurations see my backup file</li>
+</ol>
+
+
+    </section>
+  </article>
+
+  <article class='TIPS'>
+    <a name='/test' href='#/test'><h2><code><b>TIPS</b> _posts/2018-10-24-test.md</code> test</h2></a>
     <section class='body'>
       <p>This method allows the user to post a new thing to his stuff.</p>
 
@@ -483,203 +859,6 @@ git merge rebased_branch            //merge re-based branch (fast forward). to a
 
 <h2 id="copy-right">copy right</h2>
 <p>The document is wrote by Dongda. All rights reserved.</p>
-
-    </section>
-  </article>
-
-  <article class=''>
-    <a name='/response-status-codes' href='#/response-status-codes'><h2>Response status codes</h2></a>
-    <section class='body'>
-      <h3 id="success">Success</h3>
-
-<p>Successes differ from errors in that their body may not be a simple response object with a code and a message. The headers however are consistent across all calls:</p>
-
-<ul>
-  <li><code class="highlighter-rouge">GET</code>, <code class="highlighter-rouge">PUT</code>, <code class="highlighter-rouge">DELETE</code> returns <code class="highlighter-rouge">200 OK</code> on success,</li>
-  <li><code class="highlighter-rouge">POST </code> returns 201 on success,</li>
-</ul>
-
-<p>When <a href="#get-stuff">retrieving stuff</a> for example:</p>
-
-<p><code class="highlighter-rouge">Status: 200 OK</code>
-<code class="highlighter-rouge">{
-    {
-        id: thing_1,
-        name: 'My first thing'
-    },
-    {
-        id: thing_2,
-        name: 'My second thing'
-    }
-}</code></p>
-
-<h3 id="error">Error</h3>
-
-<p>Error responses are simply returning <a href="http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html">standard HTTP error codes</a> along with some additional information:</p>
-
-<ul>
-  <li>The error code is sent back as a status header,</li>
-  <li>The body includes an object describing both the code and message (for debugging and/or display purposes),</li>
-</ul>
-
-<p>For a call with an invalid authentication token for example:</p>
-
-<p><code class="highlighter-rouge">Status: 401 Access denied</code>
-<code class="highlighter-rouge">{
-    code: 401,
-    message: 'Access denied: invalid authentication token.'
-}</code></p>
-
-    </section>
-  </article>
-
-  <article class=''>
-    <a name='/authentication' href='#/authentication'><h2>Authenticate</h2></a>
-    <section class='body'>
-      <p>This method allows users to retrieve stuff.</p>
-
-<h3 id="response">Response</h3>
-
-<p>Sends back a collection of things.</p>
-
-<p><code class="highlighter-rouge">Authentication: bearer TOKEN</code>
-<code class="highlighter-rouge">{
-    id: thing_2,
-    name: 'My second thing'
-}</code></p>
-
-<p>For errors responses, see the <a href="#response-status-codes">response status codes documentation</a>.</p>
-
-    </section>
-  </article>
-
-  <article class='GET'>
-    <a name='/get-stuff' href='#/get-stuff'><h2><code><b>GET</b> _posts/2012-12-27-get-stuff.md</code> Get stuff</h2></a>
-    <section class='body'>
-      <p>This method allows users to retrieve stuff.</p>
-
-<h3 id="request">Request</h3>
-
-<ul>
-  <li>The headers must include a <strong>valid authentication token</strong>.</li>
-</ul>
-
-<h3 id="response">Response</h3>
-
-<p>Sends back a collection of things.</p>
-
-<p><code class="highlighter-rouge">Status: 200 OK</code>
-<code class="highlighter-rouge">{
-    {
-        id: thing_1,
-        name: 'My first thing'
-    },
-    {
-        id: thing_2,
-        name: 'My second thing'
-    }
-}</code></p>
-
-<p>For errors responses, see the <a href="#response-status-codes">response status codes documentation</a>.</p>
-
-    </section>
-  </article>
-
-  <article class='POST'>
-    <a name='/post-a-thing' href='#/post-a-thing'><h2><code><b>POST</b> _posts/2012-12-26-post-a-thing.md</code> Post a thing</h2></a>
-    <section class='body'>
-      <p>This method allows users to create a new thing.</p>
-
-<h3 id="request">Request</h3>
-
-<ul>
-  <li>The headers must include a <strong>valid authentication token</strong>.</li>
-  <li><strong>The body can’t be empty</strong> and must include at least the name attribute, a <code class="highlighter-rouge">string</code> that will be used as the name of the thing.</li>
-</ul>
-
-<p><code class="highlighter-rouge">Authentication: bearer TOKEN</code>
-<code class="highlighter-rouge">{
-    name: 'My new thing'
-}</code></p>
-
-<h3 id="response">Response</h3>
-
-<p><strong>If succeeds</strong>, returns the created thing.</p>
-
-<p><code class="highlighter-rouge">Status: 201 Created</code>
-<code class="highlighter-rouge">{
-    id: new_thing,
-    name: 'My new thing'
-}</code></p>
-
-<p>For errors responses, see the <a href="#response-status-codes">response status codes documentation</a>.</p>
-
-    </section>
-  </article>
-
-  <article class='PUT'>
-    <a name='/put-a-thing' href='#/put-a-thing'><h2><code><b>PUT</b> _posts/2012-12-25-put-a-thing.md</code> Update a thing</h2></a>
-    <section class='body'>
-      <p>This method allows the user to retrieve his stuff.</p>
-
-<h3 id="request">Request</h3>
-
-<ul>
-  <li><strong><code class="highlighter-rouge">:id</code></strong> is the id the thing to update.</li>
-  <li>The headers must include a <strong>valid authentication token</strong>.</li>
-  <li><strong>The body can’t be empty</strong> and must include at least the name attribute, a <code class="highlighter-rouge">string</code> that will be used as the name of the thing.</li>
-</ul>
-
-<p><code class="highlighter-rouge">Authentication: bearer f862f658-ad89-4fcb-995b-7a4c50554ff6</code>
-<code class="highlighter-rouge">{
-    name: 'My new thing'
-}</code></p>
-
-<h3 id="response">Response</h3>
-
-<p>Sends back a collection of things.</p>
-
-<p><code class="highlighter-rouge">Status: 200 OK</code>
-<code class="highlighter-rouge">{
-    {
-        id: thing_1,
-        name: 'My first thing'
-    },
-    {
-        id: thing_2,
-        name: 'My second thing'
-    }
-}</code></p>
-
-<p>For errors responses, see the <a href="#response-status-codes">response status codes documentation</a>.</p>
-
-    </section>
-  </article>
-
-  <article class='DELETE'>
-    <a name='/delete-a-thing' href='#/delete-a-thing'><h2><code><b>DELETE</b> _posts/2012-12-24-delete-a-thing.md</code> Delete a thing</h2></a>
-    <section class='body'>
-      <p>This method allows the user to post a new thing to his stuff.</p>
-
-<h3 id="request">Request</h3>
-
-<ul>
-  <li><strong><code class="highlighter-rouge">:id</code></strong> is the id the thing to delete.</li>
-  <li>The headers must include a <strong>valid authentication token</strong>.</li>
-  <li><strong>The body is omitted</strong>.</li>
-</ul>
-
-<h3 id="response">Response</h3>
-
-<p>Sends back a collection of things.</p>
-
-<p><code class="highlighter-rouge">Status: 200 Deleted</code>
-<code class="highlighter-rouge">{
-    code: 200,
-    message: 'Your thing (id: 736) was deleted'
-}</code></p>
-
-<p>For errors responses, see the <a href="#response-status-codes">response status codes documentation</a>.</p>
 
     </section>
   </article>
