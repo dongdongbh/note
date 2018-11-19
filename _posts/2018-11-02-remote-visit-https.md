@@ -11,7 +11,7 @@ layout: nil
 
 #### Visit jupyter notebook without token and open as public server
 
-1. on server run `jupyter notebook --generate-configjupyter notebook --generate-config`
+1. on server run `jupyter notebook --generate-config`
 
 2. open `ipython` and run
 
@@ -85,12 +85,6 @@ ssh -f -N tensorboard
 ```
 ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
 ```
-
-
-
-
-
-
 
 ### if you didn't configure it as a public server
 
