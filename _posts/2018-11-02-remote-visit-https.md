@@ -82,7 +82,7 @@ ssh -f -N tensorboard
 
  or just run
 
-```
+```bash
 ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
 ```
 

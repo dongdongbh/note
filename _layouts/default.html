@@ -1,4 +1,7 @@
 <!DOCTYPE html>
+{% if page.math != false %}
+  {% include mathjax.html %}
+{% endif %}
 <head>
   <title>{{ site.title }}</title>
   <meta charset='utf-8'/>
