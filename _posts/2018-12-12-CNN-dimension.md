@@ -16,17 +16,17 @@ output size is:
 $$
 O = (n-f+1) * (n-f+1)
 $$
-where input size is $n*n$, convolution core size is $f*f$.
+where input size is $n\times n$, convolution core size is $f\times f$.
 
 ![con](http://dataunion.org/wp-content/uploads/2015/03/6.gif)
 
 ### **terms**: channels, strides, padding
 
-* **channels**: look following picture, the input is  $6*6*3$ rgb picture, and we use $3*3*3$  convolution core, the last 3 is the channel number of  convolution core, which is same as the input picture channel number. During convolution, we multiply the input and add it together , so the output size is $4*4*1$.
+* **channels**: look following picture, the input is  $6\times 6\times 3$ RGB picture, and we use $3\times 3\times 3$  convolution core, the last 3 is the channel number of  convolution core, which is same as the input picture channel number. During convolution, we multiply the input and add it together , so the output size is $4\times 4\times 1$.
 
 ![cnn](https://img-blog.csdn.net/20180404135638186?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3NjY19sZWFybmluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
-and we often not only use only one convolution core, we use multi-cores to get multi-features form input. The following image shows the situation that we use two cores, so the output size is $*4*4*2*$. Then the input channel of following convolution layer is 2.
+and we often not only use only one convolution core, we use multi-cores to get multi-features form input. The following image shows the situation that we use two cores, so the output size is $4\times 4\times 2$. Then the input channel of following convolution layer is 2.
 
 
 
