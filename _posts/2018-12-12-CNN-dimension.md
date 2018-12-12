@@ -70,12 +70,16 @@ where $s$ is stride length.
 
 ![cnn](https://img-blog.csdn.net/20180912114221257?watermark/2/text/aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L2Rzc19kc3Nzc2Q=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70)
 
-So lets get the demo's output size:
+So lets get the demo's output size: 
+
+---
+
+
 $$
 \begin{equation}
 \begin{aligned}
-p&=1\\
-s&=2\\
+p=1\\
+s=2\\
 S_{input} &= 7*7*3\\
 S_{core} &= 3*3*3\\
 S_{out} &= (\frac{n+2p-f}{s}+1) * (\frac{n+2p-f}{s}+1) * C_o \\
