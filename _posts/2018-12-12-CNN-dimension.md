@@ -22,7 +22,7 @@ where input size is $n*n$, convolution core size is $f*f$.
 
 ### **terms**: channels, strides, padding
 
-* **channels**: look following picture, the input is  $6*6*3$   RGB picture, and we use $3*3*3$  convolution core, the last 3 is the channel number of  convolution core, which is same as the input picture channel number. During convolution, we multiply the input and add it together , so the output size is $4*4*1$.
+* **channels**: look following picture, the input is  $6*6*3$ rgb picture, and we use $3*3*3$  convolution core, the last 3 is the channel number of  convolution core, which is same as the input picture channel number. During convolution, we multiply the input and add it together , so the output size is $4*4*1$.
 
 ![cnn](https://img-blog.csdn.net/20180404135638186?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQvc3NjY19sZWFybmluZw==/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast)
 
