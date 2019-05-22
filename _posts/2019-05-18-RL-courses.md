@@ -8,36 +8,39 @@ type: 'TIPS'
 layout: nil
 ---
 
+#### Table of contents
+
 [Background
 ](#background)
 
-1. [1.Introduction
+[1.Introduction
     ](#1introduction)
 
-2. [2.MDP
+[2.MDP
     ](#2mdp)
-3. [3. Planning by Dynamic Programming
+
+[3. Planning by Dynamic Programming
     ](#3planningbydynamicprogramming)
 
-4. [4. model-free prediction
+[4. model-free prediction
     ](#4modelfreeprediction)
 
-5. [5 Model-free control
+[5 Model-free control
     ](#5modelfreecontrol)
 
-6. [6 Value function approximation 
+[6 Value function approximation 
     ](#6valuefunctionapproximation)
 
-7. [7 Policy gradient methods
+[7 Policy gradient methods
     ](#7policygradientmethods)
 
-8. [8.Integrating Learning and Planning
+[8.Integrating Learning and Planning
     ](#8integratinglearningandplanning)
 
-9. [9. Exploration and Exploitation
+[9. Exploration and Exploitation
    ](#9explorationandexploitation)
 
-10. [10. Case Study: RL in Classic Games
+[10. Case Study: RL in Classic Games
     ](#10casestudyrlinclassicgames)
 
 ##  Background
