@@ -8,6 +8,8 @@ type: 'TIPS'
 layout: nil
 ---
 
+[TOC]
+
 ##  Background
 
 I started learning Reinforcement Learning 2018, and I first learn it from the book "Deep Reinforcement Learning Hands-On" by Maxim Lapan, that book tells me some high level concept of Reinforcement Learning and how to implement it by Pytorch step by step. But when I dig out more about Reinforcement Learning, I find the high level intuition is not enough, so I read the [Reinforcement Learning An introduction](<http://incompleteideas.net/book/bookdraft2017nov5.pdf>) by  S.G, and following the courses [Reinforcement Learning](<https://www.youtube.com/watch?v=2pWv7GOvuf0>) by David Silver, I got  deeper understanding of RL.  For the code implementation of the book and course, refer [this](<https://github.com/dennybritz/reinforcement-learning) Github repository.
