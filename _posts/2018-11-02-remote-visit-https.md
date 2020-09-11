@@ -53,6 +53,14 @@ tensorboard --logdir=runs --host=0.0.0.0 --port=6006
 
 ----
 
+In following examples, 
+
+jumper ip: `172.16.101.136`
+
+server ip: `172.16.0.248`
+
+you have a user named `lidd` in both machine.
+
 ### if you configured it as a public server
 
 Set ip to `c.NotebookApp.ip = '0.0.0.0'` to bind on all interfaces (ips) for the **public server**
@@ -86,7 +94,7 @@ ssh -f -N tensorboard
 ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
 ```
 
-### if you didn't configure it as a public server
+### if you didn't configure it as a public server, there is a jumper
 
 > note: in this case, jupyter notebook only can be access by [localhost], so we must forward ssh tunnel twice
 
@@ -136,7 +144,6 @@ ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
    ssh -f -N tensorboard
    ```
 
-   ​	
 
 #### Method ２：
 
@@ -163,9 +170,48 @@ ssh -N -f -L 8889:172.16.0.248:8889 lidd@172.16.101.136
 
    > notice: if you use relative dirctionary, you must **run tensorboard in the dirctionary**, otherwise tensorboard con't find your log data to show
 
-
-
 ref. [SSHMenu Articles](http://sshmenu.sourceforge.net/articles/)
 
+### In case you do not have a user account of jumper machine
 
+#### Method 1
+
+In case that the jumper machine already forwards server's ssh (22) port to other opening port, let's say port 12345. But you do not have a user in jumper machine.  Then you can do follows:
+
+```
+ssh -f -N -L 9988:0.0.0.0:9600 -p 12345 server_username@jumper_ip
+```
+
+on your server machine, you create a service on port 9600, and it will be forwarded to `http://localhost:9988`. 
+
+here is the flow:
+
+```
+   service:9600
+        |
+        |
+        |
+        V     22           12345
+server----------->jumper----------->local_machine:9988
+```
+
+#### Method 2
+
+use a ssh socks proxy
+
+```
+ssh -f -N -D 9988 -p 12345 server_username@jumper_ip
+```
+
+Then you have to set you  browser proxy to socks5 with `127.0.0.1:9988`. By doing so, you can access you remote server ports by visiting `http://localhost:romete_port`. and you can also surf Internet by using the this proxy server. If you do not want connect Internet by this proxy, you can set up proxy rules only for`localhost` .
+
+#### Stop tunnel  
+
+```
+ps aux | grep ssh
+```
+
+and then find and kill the forwarding process
+
+ref ssh [ssh tunnel](https://www.howtogeek.com/168145/how-to-use-ssh-tunneling/)
 
