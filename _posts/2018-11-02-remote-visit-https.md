@@ -215,3 +215,22 @@ and then find and kill the forwarding process
 
 ref ssh [ssh tunnel](https://www.howtogeek.com/168145/how-to-use-ssh-tunneling/)
 
+### Forward TCP/UDP
+
+```
+                22                           12345
+machine A--------------jumper machine B----------------outside
+```
+
+
+
+ssh usually run on TCP, if you have a jumper machine, you want the jumper forward internal ssh connection to the outside, you can  just forward the TCP connection, This is done by `iptables`. let's say you internal **machine A** using ssh connection to the jumper **machine B** with port 22, you want to ssh the port 12345 on **machine B** to ssh **machine A** directly. 
+
+```bash
+iptables -t nat -A PREROUTING -p tcp -i <WAN interface> --dport 12345 -j DNAT --to-destination <machine-A-IP>:22
+iptables -A FORWARD -p tcp -d <machine-A-IP> --dport 22 -m state --state NEW,ESTABLISHED,RELATED -j ACCEPT
+```
+
+`WAN interface` is the WAN net card name, e.g. eth0. The first rule rewrites the destination address, the second allows the modified packet to be delivered to its destination. This assumes that machine A's default gateway is machine B.
+
+you can check by `ip route` command.
