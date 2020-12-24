@@ -217,14 +217,13 @@ ref ssh [ssh tunnel](https://www.howtogeek.com/168145/how-to-use-ssh-tunneling/)
 
 ### Forward TCP/UDP
 
+
+ssh usually run on TCP, if you have a jumper machine, you want the jumper forward internal ssh connection to the outside, you can  just forward the TCP connection, This is done by *iptables*. 
 ```
                 22                           12345
 machine A--------------jumper machine B----------------outside
 ```
-
-
-
-ssh usually run on TCP, if you have a jumper machine, you want the jumper forward internal ssh connection to the outside, you can  just forward the TCP connection, This is done by `iptables`. let's say you internal **machine A** using ssh connection to the jumper **machine B** with port 22, you want to ssh the port 12345 on **machine B** to ssh **machine A** directly. 
+Let's say you internal **machine A** using ssh connection to the jumper **machine B** with port 22, you want to ssh the port 12345 on **machine B** to ssh **machine A** directly. 
 
 ```bash
 iptables -t nat -A PREROUTING -p tcp -i <WAN interface> --dport 12345 -j DNAT --to-destination <machine-A-IP>:22
